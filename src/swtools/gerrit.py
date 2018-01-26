@@ -46,10 +46,10 @@ class Gerrit:
         logger.info(self.api_prj_url)
         logger.info(self.api_grp_url)
 
-    def get_group_info(self, owner_id):
+    def get_group_info(self, owner_id, api_suffix=""):
         # API Link: https://gerrit-documentation.storage.googleapis.com/Documentation/2.13.9/rest-api-groups.html#get-group
         # API URI: 'GET /groups/{group-id}'
-        group_url = self.api_grp_url + owner_id
+        group_url = self.api_grp_url + owner_id + api_suffix
         group_req = requests.get(url=group_url, auth=self.AUTHMethod(self.username, self.password))
         grp_info = json.loads(group_req.text.replace(self.gerrit_res_prefix, ""))
         return grp_info
@@ -86,6 +86,13 @@ class Gerrit:
                 owner_info = self.get_group_info(owner_id)
                 owners_info[owner_refspec].append(owner_info)
         return owners_info
+
+    def get_members_from_group(self, grp_id, api_suffix=""):
+        # API Link: https://gerrit-documentation.storage.googleapis.com/Documentation/2.13.9/rest-api-groups.html#group-members
+        # API URI: 'GET /groups/{group-id}/members/'
+        # If you get all included members, set api_suffix as ="?recursive"
+        members_info = self.get_group_info(grp_id, api_suffix="/members/" + api_suffix)
+        return members_info
 
 
 if __name__ == "__main__":
