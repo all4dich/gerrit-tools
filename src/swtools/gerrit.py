@@ -94,6 +94,15 @@ class Gerrit:
         members_info = self.get_group_info(grp_id, api_suffix="/members/" + api_suffix)
         return members_info
 
+    def add_member_to_group(self, grp_id, user_info):
+        # API Link: https://gerrit-documentation.storage.googleapis.com/Documentation/2.13.9/rest-api-groups.html#group-members
+        # API URI: 'GET /groups/{group-id}/members/'
+        # If you get all included members, set api_suffix as ="?recursive"
+        members_input = { "members": user_info }
+        add_members_url = self.api_grp_url + grp_id + "/members/"
+        res = add_members_req  = requests.post(url=add_members_url, auth=self.AUTHMethod(self.username, self.password), json=members_input)
+        return json.loads(res.text.replace(self.gerrit_res_prefix, ""))
+
 
 if __name__ == "__main__":
     gerrit_url = input("Gerrit Url: ")
