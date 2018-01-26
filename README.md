@@ -2,8 +2,6 @@
 
 ## Packages/Classes
 
-### swtools
-
 ### swtools.gerrit
 
 #### Gerrit
